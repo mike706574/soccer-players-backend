@@ -5,6 +5,7 @@
 pom.xml
 /resources/public/client.js
 /resources/public/js
+/resources/token.txt
 *.jar
 *.class
 .lein-deps-sum
