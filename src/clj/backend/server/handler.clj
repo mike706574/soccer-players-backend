@@ -35,10 +35,11 @@
       (wrap-logging)))
 
 (defrecord BackendHandlerFactory [authenticator
-                                 conn-manager
-                                 event-bus
-                                 thing-repo
-                                 user-manager]
+                                  conn-manager
+                                  football-repo
+                                  event-bus
+                                  thing-repo
+                                  user-manager]
   HandlerFactory
   (handler [this]
     (handler this)))
@@ -47,4 +48,4 @@
   [config]
   (component/using
    (map->BackendHandlerFactory {})
-   [:authenticator :conn-manager :thing-repo :user-manager]))
+   [:authenticator :conn-manager :football-repo :thing-repo :user-manager]))

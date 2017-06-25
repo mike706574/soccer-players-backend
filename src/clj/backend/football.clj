@@ -90,7 +90,7 @@
                                   :cache (atom (cache/ttl-cache-factory {} :ttl (* 5 60 1000)))})))
 
 (s/def :backend/football-repo-type #{:static :http})
-(s/def :backend/football-competitions string?)
+(s/def :backend/football-competitions map?)
 (s/def :backend/football-api-url string?)
 (s/def :backend/football-api-token string?)
 

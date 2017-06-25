@@ -62,7 +62,7 @@
                                                                 :query-params {"name" (name term)}
                                                                 :throw-exceptions false}))]
       (if (= status 200)
-        {:status :ok :things body}
+        {:status :ok :players body}
         {:status :error :response response}))))
 
 (defn client

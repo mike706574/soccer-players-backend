@@ -1,5 +1,6 @@
 (ns backend.server.system
-  (:require [backend.server.authentication :as auth]
+  (:require [backend.football :as football]
+            [backend.server.authentication :as auth]
             [backend.server.connection :as conn]
             [backend.server.handler :as handler]
             [backend.server.service :as service]
@@ -36,6 +37,7 @@
   (log/info (str "Building " (:backend/id config) "."))
   (configure-logging! config)
   {:thing-repo (things/repo config)
+   :football-repo (football/repo config)
    :user-manager (users/user-manager config)
    :authenticator (auth/authenticator config)
    :conn-manager (conn/manager config)

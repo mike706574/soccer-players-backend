@@ -1,5 +1,6 @@
 (ns backend.server.routes
-  (:require [backend.things :as things]
+  (:require [backend.football :as football]
+            [backend.things :as things]
             [backend.users :as users]
             [backend.server.authentication :as auth]
             [backend.server.http :refer [with-body
@@ -14,6 +15,11 @@
             [compojure.route :as route]
             [taoensso.timbre :as log]))
 
+(defn deaccent
+  [s]
+  (let [normalized (java.text.Normalizer/normalize s java.text.Normalizer$Form/NFD)]
+    (str/replace normalized #"\p{InCombiningDiacriticalMarks}+" "")))
+
 (defn retrieve-things
   [{:keys [thing-repo]} request]
   (handle-exceptions request
@@ -23,6 +29,22 @@
             (Thread/sleep 300)
             (body-response 200 request things))
           (body-response 400 request {:backend.server/message (str "Missing required query parameter: term")})))))
+
+(defn retrieve-players
+  [{repo :football-repo} {{id :competition-id term :name} :params :as request}]
+  (log/debug (str "Searching for players: " id ", " term))
+  (let [pattern (re-pattern (str "(?i)" term))
+        matches? (fn [player]
+                   (let [player-name (deaccent (:name player))]
+                     (re-find pattern player-name)))]
+    (handle-exceptions request
+      (or (not-acceptable request)
+          (let [competition (football/competition repo id)
+                players (:players competition)
+                body (if-not term
+                       players
+                       (filter matches? players))]
+            (body-response 200 request body))))))
 
 (defn create-token
   [{:keys [user-manager authenticator]} request]
@@ -50,5 +72,6 @@
     (compojure/routes
      (GET "/api/healthcheck" request {:status 200})
      (GET "/api/things" request (retrieve-things deps request))
+     (GET "/api/players/:competition-id" request (retrieve-players deps request))
      (POST "/api/tokens" request (create-token deps request))
      (route/not-found {:status 404}))))

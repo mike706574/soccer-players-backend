@@ -6,6 +6,7 @@
             [backend.server.system :as system]
             [backend.things :as things]
             [com.stuartsierra.component :as component]
+            [clojure.edn :as edn]
             [clojure.test :refer [deftest testing is]]
             [manifold.bus :as bus]
             [manifold.deferred :as d]
@@ -13,11 +14,16 @@
             [taoensso.timbre :as log]))
 
 (def port 9001)
+
+(def competitions (edn/read-string (slurp "resources/competitions.edn")))
+
 (def config {:backend/id "backend-server"
              :backend/port port
              :backend/log-path "/tmp"
              :backend/secret-key "secret"
              :backend/user-manager-type :atomic
+             :backend/football-repo-type :static
+             :backend/football-competitions competitions
              :backend/things [{:id "animal"}
                              {:id "apple"}
                              {:id "astronaut"}
@@ -31,18 +37,35 @@
                              {:id "monster"}]
              :backend/users {"mike" "rocket"}})
 
-(deftest simple-test
+(deftest thing-test
   (with-system (system/system config)
     (let [client (-> {:host (str "localhost:" port)}
                      (client/client)
                      (client/authenticate {:backend/username "mike"
-                                           :backend/password "rocket"}))
-          foo-1 {:backend/category :foo
-                 :backend/closed? false
-                 :count 4 }]
-      ;; queyr
+                                           :backend/password "rocket"}))]
+      (is (= {:status :ok,
+              :things
+              [{:id "animal"}
+               {:id "apple"}
+               {:id "astronaut"}
+               {:id "banana"}
+               {:id "cat"}
+               {:id "canine"}]}
+             (client/search client "a"))))))
 
-       (client/search client "a")
-))
-
-  )
+(deftest player-search-test
+  (with-system (system/system config)
+    (let [client (-> {:host (str "localhost:" port)}
+                     (client/client)
+                     (client/authenticate {:backend/username "mike"
+                                           :backend/password "rocket"}))]
+      (is (= {:status :ok,
+              :players
+              [{:name "Alexis Sánchez",
+                :position "Left Wing",
+                :nationality "Chile",
+                :team-name "Arsenal FC",
+                :number 7,
+                :date-of-birth "1988-12-19",
+                :contract-until "2018-06-30"}]}
+             (client/search-players client 445 "Sanchez"))))))

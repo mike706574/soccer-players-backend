@@ -8,10 +8,20 @@
 (def api-url "http://api.football-data.org/v1")
 (def api-token (str/trim (slurp "resources/token.txt")))
 
-(def repo (football/repo {:backend/football-repo-type :http
-                          :backend/football-api-url api-url
-                          :backend/football-api-token api-token}))
+(def competitions (edn/read-string (slurp "resources/competitions.edn")))
 
-(deftest retrieving-competition
-  (is (= (edn/read-string (slurp "resources/445.edn"))
-         (football/competition repo "445"))))
+(def http-repo (football/repo {:backend/football-repo-type :http
+                               :backend/football-api-url api-url
+                               :backend/football-api-token api-token}))
+
+(def static-repo
+  (football/repo {:backend/football-repo-type :static
+                  :backend/football-competitions competitions}))
+
+(def expected (assoc (get competitions "445") :status :ok))
+
+(deftest static
+  (is (= expected (football/competition static-repo "445"))))
+
+(deftest http
+  (is (= expected (football/competition http-repo "445"))))
