@@ -14,7 +14,7 @@
 (defrecord StaticFootballRepo [competitions]
   FootballRepo
   (competition [this id]
-    (get competitions id)))
+    (assoc (get competitions id) :status :ok)))
 
 (defn read-json-stream [stream]
   (json/read (io/reader stream) :key-fn keyword))
