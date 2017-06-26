@@ -108,3 +108,12 @@
   []
   (stop)
   (go))
+
+(comment
+  (client/parse @(http/get "http://localhost:8001/api/players/445"
+                           {:headers {"Accept" "application/json"}
+                            :query-params {"name" "Sanchez"}
+                            :throw-exceptions false}))
+
+
+  )

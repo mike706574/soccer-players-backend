@@ -44,6 +44,8 @@
                 body (if-not term
                        players
                        (filter matches? players))]
+            (log/debug (str (count body) " matching players found."))
+            (Thread/sleep 300)
             (body-response 200 request body))))))
 
 (defn create-token

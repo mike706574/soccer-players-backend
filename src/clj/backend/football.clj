@@ -61,21 +61,21 @@
                   responses (map assoc-players teams)
                   failures (filter #(not= (:status %) :ok) responses)]
               (if (empty? failures)
-                {:status :ok
-                 :teams (map transform-team teams)
-                 :players (mapcat :body responses)}
-                {:status :error
-                 :context :retrieving-players
-                 :responses failures
-                 :teams teams}))
+                (let [teams (map transform-team teams)
+                      players (mapcat :body responses)]
+                  (log/debug (str "Found " (count teams) " teams with " (count players) " players for competition " id "."))
+                  {:status :ok :teams teams :players players})
+                {:status :error :context :retrieving-players :responses failures :teams teams}))
         :error response))))
 
 (defrecord HttpFootballRepo [url token cache]
   FootballRepo
   (competition [this id]
     (let [state (swap! cache #(if (cache/has? % id)
-                                (cache/hit % id)
-                                (cache/miss % id (fetch-competition url token id))))]
+                                (do (log/debug (str "Cache hit: " id))
+                                    (cache/hit % id))
+                                (do (log/debug (str "Cache miss: " id))
+                                    (cache/miss % id (fetch-competition url token id)))))]
       (get state id))))
 
 (defn repo
