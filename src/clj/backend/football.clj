@@ -1,5 +1,6 @@
 (ns backend.football
   (:require [aleph.http :as http]
+            [backend.util :as util]
             [clojure.core.cache :as cache]
             [clojure.data.json :as json]
             [clojure.java.io :as io]
@@ -41,10 +42,13 @@
       (select-keys [:name :code :shortName :crestUrl])
       (set/rename-keys {:shortName :short-name :crestUrl :crest-url})))
 
-(defn transform-player [player]
-  (-> player
-      (dissoc :marketValue)
-      (set/rename-keys {:jerseyNumber :number :dateOfBirth :date-of-birth :contractUntil :contract-until})))
+(def player-renames {:jerseyNumber :number :dateOfBirth :date-of-birth :contractUntil :contract-until})
+
+(defn transform-player [dirty-player]
+  (let [player (-> dirty-player
+                   (dissoc :marketValue)
+                   (set/rename-keys player-renames))]
+    (assoc player :name-without-diacritics (util/remove-diacritics (:name player)))))
 
 (defn fetch-competition [url token id]
   (letfn [(assoc-players [team]
@@ -87,7 +91,7 @@
     :static (map->StaticFootballRepo {:competitions football-competitions})
     :http (map->HttpFootballRepo {:url football-api-url
                                   :token football-api-token
-                                  :cache (atom (cache/ttl-cache-factory {} :ttl (* 5 60 1000)))})))
+                                  :cache (atom (cache/ttl-cache-factory {} :ttl (* 20 60 1000)))})))
 
 (s/def :backend/football-repo-type #{:static :http})
 (s/def :backend/football-competitions map?)

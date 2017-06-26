@@ -67,5 +67,6 @@
                 :team-name "Arsenal FC",
                 :number 7,
                 :date-of-birth "1988-12-19",
-                :contract-until "2018-06-30"}]}
+                :contract-until "2018-06-30"
+                :name-without-diacritics "Alexis Sanchez"}]}
              (client/search-players client 445 "Sanchez"))))))

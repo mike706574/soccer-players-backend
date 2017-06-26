@@ -15,11 +15,6 @@
             [compojure.route :as route]
             [taoensso.timbre :as log]))
 
-(defn deaccent
-  [s]
-  (let [normalized (java.text.Normalizer/normalize s java.text.Normalizer$Form/NFD)]
-    (str/replace normalized #"\p{InCombiningDiacriticalMarks}+" "")))
-
 (defn retrieve-things
   [{:keys [thing-repo]} request]
   (handle-exceptions request
@@ -34,9 +29,7 @@
   [{repo :football-repo} {{id :competition-id term :name} :params :as request}]
   (log/debug (str "Searching for players: " id ", " term))
   (let [pattern (re-pattern (str "(?i)" term))
-        matches? (fn [player]
-                   (let [player-name (deaccent (:name player))]
-                     (re-find pattern player-name)))]
+        matches? (fn [player] (re-find pattern (:name-without-diacritics player)))]
     (handle-exceptions request
       (or (not-acceptable request)
           (let [competition (football/competition repo id)

@@ -1,5 +1,6 @@
 (ns backend.util
-  (:require [taoensso.timbre :as log]))
+  (:require [clojure.string :as str]
+            [taoensso.timbre :as log]))
 
 (defn pretty
   [form]
@@ -30,3 +31,8 @@
                      kn))
     :else (throw (ex-info (str "Invalid key: " k) {:key k
                                                    :class (class k)}))))
+
+(defn remove-diacritics
+  [s]
+  (let [normalized (java.text.Normalizer/normalize s java.text.Normalizer$Form/NFD)]
+    (str/replace normalized #"\p{InCombiningDiacriticalMarks}+" "")))

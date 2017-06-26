@@ -24,4 +24,10 @@
   (is (= expected (football/competition static-repo "445"))))
 
 (deftest http
-  (is (= expected (football/competition http-repo "445"))))
+  (let [competition (football/competition http-repo "445")]
+    (is (= (count expected) (count competition)))
+    (is (= expected competition))))
+
+(comment
+  (let [competitions {"445" (dissoc (football/competition http-repo "445") :status)}]
+    (spit "resources/competitions.edn" (pr-str competitions))))
