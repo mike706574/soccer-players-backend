@@ -4,7 +4,6 @@
             [backend.macros :refer [with-system unpack-response]]
             [backend.message :as message]
             [backend.server.system :as system]
-            [backend.things :as things]
             [com.stuartsierra.component :as component]
             [clojure.edn :as edn]
             [clojure.test :refer [deftest testing is]]
@@ -24,34 +23,7 @@
              :backend/user-manager-type :atomic
              :backend/football-repo-type :static
              :backend/football-competitions competitions
-             :backend/things [{:id "animal"}
-                             {:id "apple"}
-                             {:id "astronaut"}
-                             {:id "dog"}
-                             {:id "banana"}
-                             {:id "cat"}
-                             {:id "canine"}
-                             {:id "corpse"}
-                             {:id "rocket"}
-                             {:id "monster"}
-                             {:id "monster"}]
              :backend/users {"mike" "rocket"}})
-
-(deftest thing-test
-  (with-system (system/system config)
-    (let [client (-> {:host (str "localhost:" port)}
-                     (client/client)
-                     (client/authenticate {:backend/username "mike"
-                                           :backend/password "rocket"}))]
-      (is (= {:status :ok,
-              :things
-              [{:id "animal"}
-               {:id "apple"}
-               {:id "astronaut"}
-               {:id "banana"}
-               {:id "cat"}
-               {:id "canine"}]}
-             (client/search client "a"))))))
 
 (deftest player-search-test
   (with-system (system/system config)

@@ -48,17 +48,7 @@
              :backend/football-repo-type :http
              :backend/football-api-url api-url
              :backend/football-api-token api-token
-             :backend/users {"mike" "rocket"}
-             :backend/things [{:id "animal"}
-                             {:id "apple"}
-                             {:id "astronaut"}
-                             {:id "dog"}
-                             {:id "banana"}
-                             {:id "cat"}
-                             {:id "canine"}
-                             {:id "corpse"}
-                             {:id "rocket"}
-                             {:id "monster"}]})
+             :backend/users {"mike" "rocket"}})
 
 (defonce system nil)
 

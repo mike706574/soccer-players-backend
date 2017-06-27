@@ -1,6 +1,5 @@
 (ns backend.server.routes
   (:require [backend.football :as football]
-            [backend.things :as things]
             [backend.users :as users]
             [backend.server.authentication :as auth]
             [backend.server.http :refer [with-body
@@ -15,16 +14,6 @@
             [compojure.route :as route]
             [taoensso.timbre :as log]))
 
-(defn retrieve-things
-  [{:keys [thing-repo]} request]
-  (handle-exceptions request
-    (or (not-acceptable request)
-        (if-let [term (get-in request [:params :term])]
-          (let [things (things/search thing-repo term)]
-            (Thread/sleep 300)
-            (body-response 200 request things))
-          (body-response 400 request {:backend.server/message (str "Missing required query parameter: term")})))))
-
 (defn retrieve-players
   [{repo :football-repo} {{id :competition-id term :name} :params :as request}]
   (log/debug (str "Searching for players: " id ", " term))
@@ -37,9 +26,28 @@
                 body (if-not term
                        players
                        (filter matches? players))]
-            (log/debug (str (count body) " matching players found."))
+            (log/debug (str (count body) " matching players found for competition " id " and term \"" term "\"."))
             (Thread/sleep 300)
             (body-response 200 request body))))))
+
+(defn retrieve-teams
+  [{repo :football-repo} {{id :competition-id} :params :as request}]
+  (handle-exceptions request
+    (or (not-acceptable request)
+        (let [competition (football/competition repo id)
+              teams (:teams competition)]
+          (log/debug (str (count teams) " teams found for competition " id "."))
+          (Thread/sleep 300)
+          (body-response 200 request teams)))))
+
+(defn retrieve-competition
+  [{repo :football-repo} {{id :competition-id} :params :as request}]
+  (handle-exceptions request
+    (or (not-acceptable request)
+        (let [competition (football/competition repo id)]
+          (log/debug (str "Retrieved competition " id "."))
+          (Thread/sleep 300)
+          (body-response 200 request competition)))))
 
 (defn create-token
   [{:keys [user-manager authenticator]} request]
@@ -66,7 +74,8 @@
               {:status 401}))]
     (compojure/routes
      (GET "/api/healthcheck" request {:status 200})
-     (GET "/api/things" request (retrieve-things deps request))
-     (GET "/api/players/:competition-id" request (retrieve-players deps request))
+     (GET "/api/competition/:competition-id" request (retrieve-competition deps request))
+     (GET "/api/competitions/:competition-id/players" request (retrieve-players deps request))
+     (GET "/api/competitions/:competition-id/teams" request (retrieve-teams deps request))
      (POST "/api/tokens" request (create-token deps request))
      (route/not-found {:status 404}))))

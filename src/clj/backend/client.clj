@@ -26,13 +26,6 @@
   (search [this term])
   (search-players [this competition-id term]))
 
-(defn maybe-parse
-  [response]
-  (let [content-type (get-in response [:headers "content-type"])]
-    (if (contains? response :body)
-      (update response :body (comp (partial message/decode content-type)))
-      response)))
-
 (defrecord ServiceClient [host token]
   Client
   (authenticate [this credentials]
@@ -45,18 +38,8 @@
       (when (= (:status response) 201)
         (assoc this :token (-> response :body slurp)))))
 
-  (search [this term]
-    (let [{:keys [status body] :as response} (parse @(http/get (str (http-url host) "/api/things")
-                                       {:headers {"Accept" "application/json"
-                                                  "Authorization" (str "Token " token)}
-                                        :query-params {"term" (name term)}
-                                        :throw-exceptions false}))]
-      (if (= status 200)
-        {:status :ok :things body}
-        {:status :error :response response})))
-
   (search-players [this competition-id term]
-    (let [{:keys [status body] :as response} (parse @(http/get (str (http-url host) "/api/players/" competition-id )
+    (let [{:keys [status body] :as response} (parse @(http/get (str (http-url host) "/api/competitions/" competition-id "/players" )
                                                                {:headers {"Accept" "application/json"
                                                                           "Authorization" (str "Token " token)}
                                                                 :query-params {"name" (name term)}

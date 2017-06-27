@@ -4,7 +4,6 @@
             [backend.server.connection :as conn]
             [backend.server.handler :as handler]
             [backend.server.service :as service]
-            [backend.things :as things]
             [backend.users :as users]
             [backend.util :as util]
             [clojure.core.cache :as cache]
@@ -36,8 +35,7 @@
   [config]
   (log/info (str "Building " (:backend/id config) "."))
   (configure-logging! config)
-  {:thing-repo (things/repo config)
-   :football-repo (football/repo config)
+  {:football-repo (football/repo config)
    :user-manager (users/user-manager config)
    :authenticator (auth/authenticator config)
    :conn-manager (conn/manager config)
