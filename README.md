@@ -2,6 +2,13 @@
 
 A backend for a webapp.
 
+A simple REST API written in [Clojure](https://clojure.org/) using:
+  - [Aleph](https://github.com/ztellman/aleph) for HTTP
+  - [Compojure](https://github.com/weavejester/compojure) for routing
+  - [buddy](https://github.com/funcool/buddy) for authentication (currently disabled)
+
+Also uses [component](https://github.com/stuartsierra/component) and [timbre](https://github.com/ptaoussanis/timbre).
+
 ## Copyright and License
 
 The use and distribution terms for this software are covered by the
