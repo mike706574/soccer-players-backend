@@ -2,6 +2,8 @@
 
 A backend for a webapp.
 
+# What?
+
 A simple REST API written in [Clojure](https://clojure.org/) using:
   - [Aleph](https://github.com/ztellman/aleph) for HTTP
   - [Compojure](https://github.com/weavejester/compojure) for routing
