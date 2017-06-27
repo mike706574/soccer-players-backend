@@ -25,9 +25,14 @@
 
 (deftest http
   (let [competition (football/competition http-repo "445")]
-    (is (= (count expected) (count competition)))
+    (is (= :ok (:status competition)))
+    (is (= (set (keys expected)) (set (keys competition))))
+    (is (= (count (:players expected)) (count (:players competition))))
+    (is (= (count (:teams expected)) (count (:teams competition))))
     (is (= expected competition))))
 
 (comment
   (let [competitions {"445" (dissoc (football/competition http-repo "445") :status)}]
-    (spit "resources/competitions.edn" (pr-str competitions))))
+    (spit "resources/competitions.edn" (pr-str competitions)))
+
+  )

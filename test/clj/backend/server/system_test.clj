@@ -36,9 +36,9 @@
               [{:name "Alexis Sánchez",
                 :position "Left Wing",
                 :nationality "Chile",
-                :team-name "Arsenal FC",
-                :number 7,
-                :date-of-birth "1988-12-19",
-                :contract-until "2018-06-30"
-                :name-without-diacritics "Alexis Sanchez"}]}
+                :teamName "Arsenal FC",
+                :jerseyNumber 7,
+                :dateOfBirth "1988-12-19",
+                :contractUntil "2018-06-30"
+                :nameWithoutDiacritics "Alexis Sanchez"}]}
              (client/search-players client 445 "Sanchez"))))))

@@ -38,22 +38,19 @@
       {:status :error :response response})))
 
 (defn transform-team [team]
-  (-> team
-      (select-keys [:name :code :shortName :crestUrl])
-      (set/rename-keys {:shortName :short-name :crestUrl :crest-url})))
-
-(def player-renames {:jerseyNumber :number :dateOfBirth :date-of-birth :contractUntil :contract-until})
+  (select-keys team [:name :code :shortName :crestUrl]))
 
 (defn transform-player [dirty-player]
   (let [player (-> dirty-player
-                   (dissoc :marketValue)
-                   (set/rename-keys player-renames))]
-    (assoc player :name-without-diacritics (util/remove-diacritics (:name player)))))
+                   (dissoc :marketValue))]
+    (-> player
+        (dissoc :marketValue)
+        (assoc :nameWithoutDiacritics (util/remove-diacritics (:name player))))))
 
 (defn fetch-competition [url token id]
   (letfn [(assoc-players [team]
             (let [team-name (:name team)
-                  assoc-team-name #(assoc % :team-name team-name)
+                  assoc-team-name #(assoc % :teamName team-name)
                   player-url (-> team :_links :players :href)
                   response (fetch player-url token)]
               (if (= (:status response) :ok)

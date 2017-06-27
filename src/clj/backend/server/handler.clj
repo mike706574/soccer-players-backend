@@ -38,7 +38,6 @@
                                   conn-manager
                                   football-repo
                                   event-bus
-                                  thing-repo
                                   user-manager]
   HandlerFactory
   (handler [this]
@@ -48,4 +47,4 @@
   [config]
   (component/using
    (map->BackendHandlerFactory {})
-   [:authenticator :conn-manager :football-repo :thing-repo :user-manager]))
+   [:authenticator :conn-manager :football-repo :user-manager]))

@@ -18,7 +18,7 @@
   [{repo :football-repo} {{id :competition-id term :name} :params :as request}]
   (log/debug (str "Searching for players: " id ", " term))
   (let [pattern (re-pattern (str "(?i)" term))
-        matches? (fn [player] (re-find pattern (:name-without-diacritics player)))]
+        matches? (fn [player] (re-find pattern (:nameWithoutDiacritics player)))]
     (handle-exceptions request
       (or (not-acceptable request)
           (let [competition (football/competition repo id)
