@@ -4,16 +4,32 @@
             [clojure.string :as str]
             [taoensso.timbre :as log]))
 
+(def default-media-type "application/json")
 (def primary-media-types #{"application/edn"
                            "application/json"
                            "application/transit+json"
                            "application/transit+msgpack"})
 
+(defn parse-media-type
+  [header]
+  (str/trim (first (str/split header #";"))))
+
+(defn header [request name] (get-in request [:headers name]))
+
+(defn content-type
+  [request]
+  (parse-media-type (or (header request "content-type") default-media-type)))
+
+(defn accept
+  [request]
+  (let [value (header request "accept")]
+    (parse-media-type (if (or (not value) (= value "*/*"))
+                        default-media-type
+                        value))))
+
 (defn unsupported-media-type?
-  [{headers :headers} supported-media-types]
-  (if-let [content-type (or (get headers "content-type") "application/json")]
-    (not (contains? supported-media-types content-type))
-    true))
+  [request supported-media-types]
+  (not (contains? supported-media-types (content-type request))))
 
 (defn unsupported-media-type
   ([request]
@@ -24,10 +40,8 @@
       :headers {"Accepts" (str/join ", " supported-media-types)}})))
 
 (defn not-acceptable?
-  [{headers :headers} supported-media-types]
-  (if-let [accept (or (get headers "accept") "application/json")]
-    (not (contains? supported-media-types accept))
-    true))
+  [request supported-media-types]
+  (not (contains? supported-media-types (accept request))))
 
 (defn not-acceptable
   ([request]
@@ -39,7 +53,7 @@
 
 (defn parsed-body
   [request]
-  (let [content-type (get-in request [:headers "content-type"])]
+  (let [content-type (content-type request)]
     (try
       (message/decode content-type (:body request))
       (catch Exception ex
@@ -47,7 +61,7 @@
 
 (defn response-body "application/transit+msgpack"
   [request body]
-  (let [content-type (get-in request [:headers "accept"])]
+  (let [content-type (accept request)]
     (try
       (message/encode content-type body)
       (catch Exception ex
@@ -59,7 +73,7 @@
 (defn body-response
   [status request body]
   {:status status
-   :headers {"Content-Type" (get-in request [:headers "accept"])}
+   :headers {"Content-Type" (accept request)}
    :body (response-body request body)})
 
 (defmacro with-body

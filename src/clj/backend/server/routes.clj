@@ -82,6 +82,4 @@
      (GET "/api/competitions/:competition-id/players" request (retrieve-players deps request))
      (GET "/api/competitions/:competition-id/teams" request (retrieve-teams deps request))
      (POST "/api/tokens" request (create-token deps request))
-     (route/not-found {:status 404
-                       :headers {"Content-Type" "text/plain"}
-                       :body "Not found."}))))
+     (fn [request] (body-response 404 request {:bottle.server/message "Not found."})))))
