@@ -21,14 +21,16 @@
         matches? (fn [player] (re-find pattern (:nameWithoutDiacritics player)))]
     (handle-exceptions request
       (or (not-acceptable request)
-          (let [competition (football/competition repo id)
-                players (:players competition)
-                body (if-not term
-                       players
-                       (filter matches? players))]
-            (log/debug (str (count body) " matching players found for competition " id " and term \"" term "\"."))
-            (Thread/sleep 300)
-            (body-response 200 request body))))))
+          (let [response (football/competition repo id)]
+            (if (= (:status response) :ok)
+              (let [players (:players response)
+                    body (if-not term
+                           players
+                           (filter matches? players))]
+                  (log/debug (str (count body) " matching players found for competition " id " and term \"" term "\"."))
+                  (Thread/sleep 300)
+                  (body-response 200 request body))
+              (throw (ex-info (str "Failed to retrieve competition " id ".") response))))))))
 
 (defn retrieve-teams
   [{repo :football-repo} {{id :competition-id} :params :as request}]

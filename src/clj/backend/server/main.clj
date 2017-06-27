@@ -1,7 +1,8 @@
 (ns backend.server.main
-  (:require [com.stuartsierra.component :as component]
+  (:require [backend.server.system :as system]
+            [clojure.string :as str]
+            [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
-            [backend.server.system :as system]
             [taoensso.timbre :as log])
   (:gen-class :main true))
 
@@ -9,7 +10,6 @@
 (def api-token (str/trim (slurp "resources/token.txt")))
 
 (def config {:backend/id "backend-server"
-             :backend/port port
              :backend/log-path "/tmp"
              :backend/secret-key "secret"
              :backend/user-manager-type :atomic
@@ -23,7 +23,7 @@
   (log/set-level! :debug)
   (let [port (Integer. (or port (env :port) 5000))]
     (log/info (str "Using port " port "."))
-    (let [system (system/system (assoc fonig :backend/port port))]
+    (let [system (system/system (assoc config :backend/port port))]
       (log/info "Starting system.")
       (component/start-system system)
       (log/info "Waiting forever.")

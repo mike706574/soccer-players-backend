@@ -32,6 +32,10 @@
 (def ^:dynamic *wait-increase* 200)
 (def ^:dynamic *max-attempts* 20)
 
+(defn retry?
+  [status]
+  (contains? #{403 429} status))
+
 (defn fetch [url token]
   (log/debug (str "FETCH " url))
   (loop [i 1
@@ -39,19 +43,22 @@
     (let [response (parse-body @(http/get url
                                           {:headers {"X-Auth-Token" token}
                                            :throw-exceptions false}))
-          {:keys [status body]} response ]
-      (if (= 200 status)
-        (do (log/debug (str "FETCH => " status))
-            {:status :ok :body body})
+          {:keys [status body]} response]
+      (if (retry? status)
         (let [label (str "FETCH => " status " => ")]
           (if (>= i *max-attempts*)
             (do (log/error (str label "Giving up after " *max-attempts* " attempts."))
-                {:status :retry-exhaustion
+                {:status :error
                  :response response
                  :max-attempts *max-attempts*})
             (do (log/warn (str label "Attempt " i " of " *max-attempts* " rejected. Sleeping for " wait " ms."))
                 (Thread/sleep wait)
-                (recur (inc i) (+ wait *wait-increase*)))))))))
+                (recur (inc i) (+ wait *wait-increase*)))))
+        (if (= 200 status)
+          (do (log/debug (str "FETCH => " status))
+              {:status :ok :body body})
+          (do (log/debug (str "FETCH => " status))
+              {:status :error :response response}))))))
 
 (defn transform-team [team]
   (select-keys team [:name :code :shortName :crestUrl]))
@@ -106,8 +113,6 @@
                                   :token football-api-token
                                   :cache (atom (cache/ttl-cache-factory {} :ttl (* 48 60 60 1000)))})))
 
-(* 24 60 60)
-
 (s/def :backend/football-repo-type #{:static :http})
 (s/def :backend/football-competitions map?)
 (s/def :backend/football-api-url string?)
@@ -117,16 +122,3 @@
 (defmethod repo-type :static [_] (s/keys :req [:backend/football-competitions]))
 (defmethod repo-type :http [_] (s/keys :req [:backend/football-api-url :backend/football-api-token]))
 (s/def :backend/football-config (s/multi-spec repo-type :backend/football-repo-type))
-
-
-(comment
-  (def api-url "http://api.football-data.org/v1")
-  (def api-token (str/trim (slurp "resources/tokexn.txt")))
-
-  (map
-   (comp #(select-keys % [:id :caption]))
-   (:body (fetch (str api-url "/competitions/?season=2016") api-token)))
-
-  (fetch (str api-url "/lkeanlkea") api-token)
-
-  )
