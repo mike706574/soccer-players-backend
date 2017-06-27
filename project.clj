@@ -1,5 +1,5 @@
 (defproject org.clojars.mike706574/backend "0.0.1-SNAPSHOT"
-  :description "Describe me!"
+  :description "The backend for a webapp."
   :url "https://github.com/mike706574/backend-webapp"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
