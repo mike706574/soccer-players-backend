@@ -38,7 +38,7 @@
 (def port 8001)
 
 (def api-url "http://api.football-data.org/v1")
-(def api-token (str/trim (slurp "resources/token.txt")))
+(def api-token (str/trim (slurp (io/resource "token.txt"))))
 
 (def config {:backend/id "backend-server"
              :backend/port port

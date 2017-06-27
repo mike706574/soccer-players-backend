@@ -1,5 +1,6 @@
 (ns backend.server.main
   (:require [backend.server.system :as system]
+            [clojure.java.io :as io]
             [clojure.string :as str]
             [com.stuartsierra.component :as component]
             [environ.core :refer [env]]
@@ -7,7 +8,7 @@
   (:gen-class :main true))
 
 (def api-url "http://api.football-data.org/v1")
-(def api-token (str/trim (slurp "resources/token.txt")))
+(def api-token (str/trim (slurp (io/resource "token.txt"))))
 
 (def config {:backend/id "backend-server"
              :backend/log-path "/tmp"

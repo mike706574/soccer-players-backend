@@ -6,7 +6,7 @@
             [clojure.test :refer [deftest testing is]]))
 
 (def api-url "http://api.football-data.org/v1")
-(def api-token (str/trim (slurp "resources/token.txt")))
+(def api-token (str/trim (slurp (io/resource "token.txt"))))
 
 (def competitions (edn/read-string (slurp "resources/competitions.edn")))
 

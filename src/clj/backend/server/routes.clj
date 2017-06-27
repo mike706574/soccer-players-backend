@@ -75,9 +75,13 @@
             (when-not (auth/authenticated? authenticator request)
               {:status 401}))]
     (compojure/routes
-     (GET "/api/healthcheck" request {:status 200})
-     (GET "/api/competition/:competition-id" request (retrieve-competition deps request))
+     (GET "/api/healthcheck" request {:status 200
+                                      :headers {"Content-Type" "text/plain"}
+                                      :body "Howdy!"})
+     (GET "/api/competitions/:competition-id" request (retrieve-competition deps request))
      (GET "/api/competitions/:competition-id/players" request (retrieve-players deps request))
      (GET "/api/competitions/:competition-id/teams" request (retrieve-teams deps request))
      (POST "/api/tokens" request (create-token deps request))
-     (route/not-found {:status 404}))))
+     (route/not-found {:status 404
+                       :headers {"Content-Type" "text/plain"}
+                       :body "Not found."}))))
