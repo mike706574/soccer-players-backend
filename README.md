@@ -2,9 +2,9 @@
 
 A backend for a webapp.
 
-# What?
+### Some details
 
-A simple REST API written in [Clojure](https://clojure.org/) using:
+It's a simple REST API written in [Clojure](https://clojure.org/) using:
   - [Aleph](https://github.com/ztellman/aleph) for HTTP
   - [Compojure](https://github.com/weavejester/compojure) for routing
   - [buddy](https://github.com/funcool/buddy) for authentication (currently disabled)
