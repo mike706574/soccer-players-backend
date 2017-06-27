@@ -8,23 +8,22 @@
   (:gen-class :main true))
 
 (def api-url "http://api.football-data.org/v1")
-(def api-token (str/trim (slurp (io/resource "token.txt"))))
-
 (def config {:backend/id "backend-server"
              :backend/log-path "/tmp"
              :backend/secret-key "secret"
              :backend/user-manager-type :atomic
              :backend/football-repo-type :http
              :backend/football-api-url api-url
-             :backend/football-api-token api-token
              :backend/users {"mike" "rocket"}})
 
 (defn -main
   [& [port]]
   (log/set-level! :debug)
-  (let [port (Integer. (or port (env :port) 5000))]
+  (let [port (Integer. (or port (env :port) 5000))
+        api-token (str/trim (slurp (io/resource "token.txt")))]
     (log/info (str "Using port " port "."))
-    (let [system (system/system (assoc config :backend/port port))]
+    (let [system (system/system (merge config {:backend/port port
+                                               :backend/football-api-token api-token}))]
       (log/info "Starting system.")
       (component/start-system system)
       (log/info "Waiting forever.")
