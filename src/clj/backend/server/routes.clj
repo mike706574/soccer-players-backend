@@ -3,11 +3,11 @@
             [backend.users :as users]
             [backend.server.authentication :as auth]
             [backend.server.http :refer [with-body
-                                        handle-exceptions
-                                        body-response
-                                        not-acceptable
-                                        parsed-body
-                                        unsupported-media-type]]
+                                         handle-exceptions
+                                         body-response
+                                         not-acceptable
+                                         parsed-body
+                                         unsupported-media-type]]
             [clj-time.core :as time]
             [clojure.string :as str]
             [compojure.core :as compojure :refer [ANY DELETE GET PATCH POST PUT]]

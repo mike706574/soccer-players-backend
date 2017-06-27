@@ -3,7 +3,7 @@
             [clj-time.core :as time]
             [clojure.string :as str]))
 
-(defn ^:private  token-from-header
+(defn ^:private token-from-header
   [request]
   (some-> request
           :headers

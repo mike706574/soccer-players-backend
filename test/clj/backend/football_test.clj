@@ -32,7 +32,12 @@
     (is (= expected competition))))
 
 (comment
-  (let [competitions {"445" (dissoc (football/competition http-repo "445") :status)}]
+  (let [repo  {"445" (dissoc (football/competition http-repo "445") :status)}]
     (spit "resources/competitions.edn" (pr-str competitions)))
+
+  (let [repo (football/repo {:backend/football-repo-type :http
+                             :backend/football-api-url api-url
+                             :backend/football-api-token api-token})]
+    (football/competition repo "445"))
 
   )
