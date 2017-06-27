@@ -11,7 +11,7 @@
 
 (defn unsupported-media-type?
   [{headers :headers} supported-media-types]
-  (if-let [content-type (get headers "content-type")]
+  (if-let [content-type (or (get headers "content-type") "application/json")]
     (not (contains? supported-media-types content-type))
     true))
 
@@ -25,7 +25,7 @@
 
 (defn not-acceptable?
   [{headers :headers} supported-media-types]
-  (if-let [accept (get headers "accept")]
+  (if-let [accept (or (get headers "accept") "application/json")]
     (not (contains? supported-media-types accept))
     true))
 
