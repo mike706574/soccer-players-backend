@@ -1,6 +1,6 @@
 # soccer-players-backend
 
-A backend webapp for a webapp.
+A backend for a webapp.
 
 ## Copyright and License
 
