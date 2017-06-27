@@ -98,8 +98,12 @@
     (let [state (swap! cache #(if (cache/has? % id)
                                 (do (log/debug (str "Cache hit: " id))
                                     (cache/hit % id))
-                                (do (log/debug (str "Cache miss: " id))
-                                    (cache/miss % id (fetch-competition url token id)))))]
+                                (let [response (fetch-competition url token id)]
+                                  (if (= (:status response) :ok)
+                                    (do (log/debug (str "Cache miss: " id))
+                                        (cache/miss % id response))
+                                    (do (log/debug (str "Operation failed - not caching: " id))
+                                        response)))))]
       (get state id))))
 
 (defn repo
