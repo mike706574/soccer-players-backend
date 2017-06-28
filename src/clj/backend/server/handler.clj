@@ -25,7 +25,7 @@
           (log/error e label)
           {:status 500})))))
 
-(defn handler
+(defn backend-handler
   [deps]
   (-> (routes/routes deps)
       (wrap-cors :access-control-allow-origin [#".*"]
@@ -41,7 +41,7 @@
                                   user-manager]
   HandlerFactory
   (handler [this]
-    (handler this)))
+    (backend-handler this)))
 
 (defn factory
   [config]

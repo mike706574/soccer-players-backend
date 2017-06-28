@@ -63,12 +63,10 @@
 (defn transform-team [team]
   (select-keys team [:name :code :shortName :crestUrl]))
 
-(defn transform-player [dirty-player]
-  (let [player (-> dirty-player
-                   (dissoc :marketValue))]
-    (-> player
-        (dissoc :marketValue)
-        (assoc :nameWithoutDiacritics (util/remove-diacritics (:name player))))))
+(defn transform-player [player]
+  (-> player
+      (dissoc :marketValue)
+      (assoc :nameWithoutDiacritics (util/remove-diacritics (:name player)))))
 
 (defn fetch-competition [url token id]
   (letfn [(assoc-players [team]
