@@ -28,8 +28,7 @@
                :body any?)
   :ret byte-array?)
 
-(defmulti  decode-stream
-  "Encodes the string using the given content-type."
+(defmulti decode-stream
   (fn [content-type body] content-type))
 
 (defmethod decode-stream "application/edn"
@@ -59,6 +58,7 @@
                    :content-type content-type})))
 
 (defn decode
+  "Decodes body using the given content type content-type."
   [content-type body]
   (decode-stream
    content-type
@@ -75,7 +75,7 @@
                       :body body})))))
 
 (defmulti encode
-  "Encodes the string using the given content-type."
+  "Encodes body using the given content-type content-type."
   (fn [content-type body] content-type))
 
 (defmethod encode "text/plain"

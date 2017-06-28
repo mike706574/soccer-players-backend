@@ -5,16 +5,14 @@
             [backend.server.http :refer [with-body
                                          handle-exceptions
                                          body-response
-                                         not-acceptable
-                                         parsed-body
-                                         unsupported-media-type]]
+                                         not-acceptable]]
             [clj-time.core :as time]
             [clojure.string :as str]
-            [compojure.core :as compojure :refer [ANY DELETE GET PATCH POST PUT]]
+            [compojure.core :as compojure :refer [GET POST]]
             [compojure.route :as route]
             [taoensso.timbre :as log]))
 
-(defn retrieve-players
+(defn ^:private retrieve-players
   [{repo :football-repo} {{id :competition-id term :name} :params :as request}]
   (log/debug (str "Searching for players: " id ", " term))
   (let [pattern (re-pattern (str "(?i)" term))
@@ -32,7 +30,7 @@
                   (body-response 200 request body))
               (throw (ex-info (str "Failed to retrieve competition " id ".") response))))))))
 
-(defn retrieve-teams
+(defn ^:private retrieve-teams
   [{repo :football-repo} {{id :competition-id} :params :as request}]
   (handle-exceptions request
     (or (not-acceptable request)
@@ -42,7 +40,7 @@
           (Thread/sleep 300)
           (body-response 200 request teams)))))
 
-(defn retrieve-competition
+(defn ^:private retrieve-competition
   [{repo :football-repo} {{id :competition-id} :params :as request}]
   (handle-exceptions request
     (or (not-acceptable request)
@@ -51,7 +49,7 @@
           (Thread/sleep 300)
           (body-response 200 request competition)))))
 
-(defn create-token
+(defn ^:private create-token
   [{:keys [user-manager authenticator]} request]
   (try
     (or (not-acceptable request #{"text/plain"})

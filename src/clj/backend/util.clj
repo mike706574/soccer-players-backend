@@ -12,14 +12,6 @@
   [f coll]
   (into {} (map (fn [[k v]] [k (f v)]) coll)))
 
-(defmacro log-exceptions
-  [message & body]
-  `(try
-     ~@body
-     (catch Exception e#
-       (log/error e# ~message)
-       (throw e#))))
-
 (defn unkeyword
   [k]
   (cond

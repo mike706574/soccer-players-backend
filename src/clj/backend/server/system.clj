@@ -31,7 +31,7 @@
                                     :backend/user-manager-type]
                               :opt [:backend/users]))
 
-(defn build
+(defn ^:private build
   [config]
   (log/info (str "Building " (:backend/id config) "."))
   (configure-logging! config)
