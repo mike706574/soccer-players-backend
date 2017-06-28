@@ -25,7 +25,6 @@
                            players
                            (filter matches? players))]
                   (log/debug (str (count body) " matching players found for competition " id " and term \"" term "\"."))
-                  (Thread/sleep 300)
                   (body-response 200 request body))
               (throw (ex-info (str "Failed to retrieve competition " id ".") response))))))))
 
@@ -36,7 +35,6 @@
         (let [competition (football/competition repo id)
               teams (:teams competition)]
           (log/debug (str (count teams) " teams found for competition " id "."))
-          (Thread/sleep 300)
           (body-response 200 request teams)))))
 
 (defn ^:private retrieve-competition
@@ -45,7 +43,6 @@
     (or (not-acceptable request)
         (let [competition (football/competition repo id)]
           (log/debug (str "Retrieved competition " id "."))
-          (Thread/sleep 300)
           (body-response 200 request competition)))))
 
 (defn ^:private create-token
