@@ -18,7 +18,6 @@
                                       :backend/password password}))
 
 (defn http-url [host] (str "http://" host))
-(defn ws-url [host] (str "ws://" host))
 
 (defprotocol Client
   (authenticate [this credentials])

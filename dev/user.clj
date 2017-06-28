@@ -50,7 +50,6 @@
 (defonce system nil)
 
 (def url (str "http://localhost:" port))
-(def ws-url (str "ws://localhost:" port "/api/websocket"))
 
 (defn init
   "Creates and initializes the system under development in the Var
