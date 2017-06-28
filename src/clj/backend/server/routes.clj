@@ -6,7 +6,6 @@
                                          handle-exceptions
                                          body-response
                                          not-acceptable]]
-            [clj-time.core :as time]
             [clojure.string :as str]
             [compojure.core :as compojure :refer [GET POST]]
             [compojure.route :as route]

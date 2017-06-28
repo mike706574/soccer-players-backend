@@ -21,9 +21,6 @@
    [clojure.spec.test.alpha :as stest]
 
    [aleph.http :as http]
-   [manifold.stream :as stream]
-   [manifold.deferred :as deferred]
-   [manifold.bus :as bus]
    [taoensso.timbre :as log]
 
    [backend.client :as client]

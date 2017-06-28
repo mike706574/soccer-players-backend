@@ -7,14 +7,11 @@
   :dependencies [[org.clojure/clojure "1.9.0-alpha16"]
                  [org.clojure/spec.alpha "0.1.123"]
                  [org.clojure/data.json "0.2.6"]
-                 [org.clojure/core.async "0.3.443"]
                  [org.clojure/core.cache "0.6.5"]
                  [com.stuartsierra/component "0.3.2"]
 
                  ;; Utility
                  [com.cognitect/transit-clj "0.8.300"]
-                 [manifold "0.1.6"]
-                 [byte-streams "0.2.3"]
                  [environ "1.1.0"]
                  [clj-time "0.13.0"]
 
@@ -24,10 +21,9 @@
                  ;; Web
                  [aleph "0.4.3"]
                  [ring/ring-anti-forgery "1.1.0"]
-                 [ring-cors "0.1.10"]
+                 [ring-cors "0.1.11"]
                  [ring/ring-defaults "0.3.0"]
                  [compojure "1.6.0"]
-                 [selmer "1.10.7"]
 
                  ;; Security
                  [buddy/buddy-hashers "1.2.0"]

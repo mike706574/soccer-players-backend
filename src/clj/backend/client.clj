@@ -1,6 +1,5 @@
 (ns backend.client
   (:require [aleph.http :as http]
-            [manifold.stream :as s]
             [backend.message :as message]
             [backend.users :as users]
             [clojure.data.json :as json]

@@ -9,9 +9,6 @@
             [clojure.java.io :as io]
             [clojure.string :as str]
             [clojure.test :refer [deftest testing is]]
-            [manifold.bus :as bus]
-            [manifold.deferred :as d]
-            [manifold.stream :as s]
             [taoensso.timbre :as log]))
 
 (def port 9001)

@@ -8,7 +8,6 @@
             [clojure.core.cache :as cache]
             [clojure.spec.alpha :as s]
             [com.stuartsierra.component :as component]
-            [manifold.bus :as bus]
             [taoensso.timbre :as log]
             [taoensso.timbre.appenders.core :as appenders]))
 
