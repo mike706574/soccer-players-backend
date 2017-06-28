@@ -1,7 +1,6 @@
 (ns backend.server.system
   (:require [backend.football :as football]
             [backend.server.authentication :as auth]
-            [backend.server.connection :as conn]
             [backend.server.handler :as handler]
             [backend.server.service :as service]
             [backend.users :as users]
@@ -26,10 +25,10 @@
 (s/def :backend/user-manager-type #{:atomic})
 (s/def :backend/users (s/map-of :backend/username :backend/password))
 (s/def :backend/config (s/keys :req [:backend/id
-                                    :backend/port
-                                    :backend/log-path
-                                    :backend/user-manager-type]
-                              :opt [:backend/users]))
+                                     :backend/port
+                                     :backend/log-path
+                                     :backend/user-manager-type]
+                               :opt [:backend/users]))
 
 (defn ^:private build
   [config]
@@ -38,7 +37,6 @@
   {:football-repo (football/repo config)
    :user-manager (users/user-manager config)
    :authenticator (auth/authenticator config)
-   :conn-manager (conn/manager config)
    :handler-factory (handler/factory config)
    :app (service/aleph-service config)})
 

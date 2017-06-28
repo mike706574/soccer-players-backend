@@ -2,7 +2,6 @@
   (:require [com.stuartsierra.component :as component]
             [taoensso.timbre :as log]
             [aleph.http :as aleph-http]
-            [backend.server.connection :as conn]
             [backend.server.handler :as handler])
   (:gen-class :main true))
 
@@ -24,9 +23,8 @@
                                                                 :port port})))))
 
 (defn- stop-service
-  [{:keys [id port server conn-manager] :as service}]
+  [{:keys [id port server] :as service}]
   (log/info (str "Stopping " id " on port " port "..."))
-  (conn/close-all! conn-manager)
   (.close server)
   (dissoc service :server))
 
@@ -35,7 +33,7 @@
   (log/info (str id " already stopped."))
   service)
 
-(defrecord AlephService [id port handler-factory server conn-manager]
+(defrecord AlephService [id port handler-factory server]
   component/Lifecycle
   (start [this]
     (if server
@@ -50,4 +48,4 @@
   [{:keys [:backend/id :backend/port] :as config}]
   (component/using
    (map->AlephService {:id id :port port})
-   [:conn-manager :handler-factory]))
+   [:handler-factory]))

@@ -7,10 +7,10 @@
             [cognitect.transit :as transit]))
 
 (def supported-content-type #{"text/plain"
-                            "application/edn"
-                            "application/json"
-                            "application/transit+json"
-                            "application/transit+msgpack"})
+                              "application/edn"
+                              "application/json"
+                              "application/transit+json"
+                              "application/transit+msgpack"})
 
 (def ^:private byte-array-type (type (byte-array [])))
 (def byte-array? (partial instance? byte-array-type))

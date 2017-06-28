@@ -35,7 +35,6 @@
       (wrap-logging)))
 
 (defrecord BackendHandlerFactory [authenticator
-                                  conn-manager
                                   football-repo
                                   event-bus
                                   user-manager]
@@ -47,4 +46,4 @@
   [config]
   (component/using
    (map->BackendHandlerFactory {})
-   [:authenticator :conn-manager :football-repo :user-manager]))
+   [:authenticator :football-repo :user-manager]))
