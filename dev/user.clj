@@ -23,10 +23,11 @@
    [aleph.http :as http]
    [taoensso.timbre :as log]
 
+   [boomerang.message :as message]
+
    [backend.client :as client]
    [backend.users :as users]
-   [backend.server.system :as system]
-   [backend.message :as message]))
+   [backend.server.system :as system]))
 
 (log/set-level! :trace)
 

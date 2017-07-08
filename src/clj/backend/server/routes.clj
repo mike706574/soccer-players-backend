@@ -2,10 +2,10 @@
   (:require [backend.football :as football]
             [backend.users :as users]
             [backend.server.authentication :as auth]
-            [backend.server.http :refer [with-body
-                                         handle-exceptions
-                                         body-response
-                                         not-acceptable]]
+            [boomerang.http :refer [with-body
+                                    handle-exceptions
+                                    body-response
+                                    not-acceptable]]
             [clojure.string :as str]
             [compojure.core :as compojure :refer [GET POST]]
             [compojure.route :as route]

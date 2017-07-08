@@ -11,7 +11,7 @@
                  [com.stuartsierra/component "0.3.2"]
 
                  ;; Utility
-                 [com.cognitect/transit-clj "0.8.300"]
+                 [org.clojars.mike706574/boomerang "0.1.0-SNAPSHOT"]
                  [environ "1.1.0"]
                  [clj-time "0.13.0"]
 
